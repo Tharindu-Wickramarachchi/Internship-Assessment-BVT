@@ -85,3 +85,19 @@ export const signup = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const logout = async (req, res) => {
+    try {
+      // Clear authentication cookies
+      res.cookie("accessToken", "", { maxAge: 0 });
+      res.cookie("refreshToken", "", { maxAge: 0 });
+  
+      res.status(200).json({
+        success: true,
+        message: "Logout successful",
+      });
+    } catch (error) {
+      console.error("Error in logout controller:", error.message);
+      res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+  };
