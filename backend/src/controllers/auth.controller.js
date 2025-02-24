@@ -1,5 +1,36 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
+import jwt from "jsonwebtoken";
+
+const generateTokens = (userId) => {
+  const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "15m",
+  });
+
+  const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: "7d",
+  });
+
+  return { accessToken, refreshToken };
+};
+
+const setCookies = (res, accessToken, refreshToken) => {
+  // Store Access Token in a cookie
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true, // Prevent JavaScript access (protects against XSS attacks), Cross Site Scripting attack
+    secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
+    sameSite: "strict", // Prevents CSRF attacks, Cross-Site Request Forgery attack
+    maxAge: 15 * 60 * 1000, // 15 minutes
+  });
+
+  // Store Refresh Token in a separate cookie
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true, // Prevent JavaScript access (protects against XSS attacks), Cross Site Scripting attack
+    secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
+    sameSite: "strict", // Prevents CSRF attacks, Cross Site Request Forgery attack
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
+};
 
 export const signup = async (req, res) => {
   const { name, email, password } = req.body;
@@ -32,6 +63,12 @@ export const signup = async (req, res) => {
       verificationToken,
       verificationTokenExpiresAt: Date.now() + 15 * 60 * 1000, // 15 minutes
     });
+
+    // Generate JWT tokens
+    const { accessToken, refreshToken } = generateTokens(user._id);
+
+    // Set cookies with tokens
+    setCookies(res, accessToken, refreshToken);
 
     // Save user to database
     await user.save();
