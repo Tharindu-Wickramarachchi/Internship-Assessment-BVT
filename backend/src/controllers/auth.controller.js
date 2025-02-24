@@ -240,3 +240,25 @@ export const resendVerificationEmail = async (req, res) => {
       .json({ success: false, message: "Internal server error." });
   }
 };
+
+export const deleteAccount = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // Check if the email exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Delete the user account
+    await User.deleteOne({ email });
+
+    res
+      .status(200)
+      .json({ success: true, message: "Account deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleteAccount controller:", error);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
+};
