@@ -147,3 +147,46 @@ export const logout = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
+export const verifyEmail = async (req, res) => {
+  const { email, verificationToken } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Check if token matches
+    if (user.verificationToken !== verificationToken) {
+      return res.status(400).json({ message: "Invalid verification token." });
+    }
+
+    // Check if the token has expired
+    if (
+      user.verificationTokenExpiresAt &&
+      new Date() > user.verificationTokenExpiresAt
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Verification token has expired." });
+    }
+
+    user.isVerified = true; // Mark user as verified
+    user.verificationToken = null; // Remove the token after successful verification
+    user.verificationTokenExpiresAt = null; // Clear expiry date
+
+    // Save the updated user
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Email verified successfully." });
+  } catch (error) {
+    console.error("Email verification error:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error." });
+  }
+};
