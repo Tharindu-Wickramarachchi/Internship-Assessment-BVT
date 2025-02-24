@@ -33,8 +33,6 @@ export const createTask = async (req, res) => {
   }
 };
 
-import Task from "../models/Task.js"; // Assuming you have a Task model
-
 export const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
