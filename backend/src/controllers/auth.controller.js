@@ -190,3 +190,43 @@ export const verifyEmail = async (req, res) => {
       .json({ success: false, message: "Internal server error." });
   }
 };
+
+export const resendVerificationEmail = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    if (!email) {
+      return res.status(400).json({ message: "Email is required." });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({ message: "User is already verified." });
+    }
+
+    // Generate a new verification token
+    const newVerificationToken = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
+    user.verificationToken = newVerificationToken; // Update the verification token
+    user.verificationTokenExpiresAt = Date.now() + 15 * 60 * 1000; // Update the expiry date : 15 minutes
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Verification email sent successfully.",
+    });
+  } catch (error) {
+    console.error("Error in resendVerificationEmail controller:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error." });
+  }
+};
