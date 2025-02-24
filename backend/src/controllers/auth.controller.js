@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { sendVerificationEmail, sendWelcomeEmail } from "./email.controller.js";
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
@@ -69,6 +70,9 @@ export const signup = async (req, res) => {
 
     // Set cookies with tokens
     setCookies(res, accessToken, refreshToken);
+
+    // Send verification email
+    await sendVerificationEmail(user.email, verificationToken);
 
     // Save user to database
     await user.save();
@@ -177,6 +181,9 @@ export const verifyEmail = async (req, res) => {
     user.verificationToken = null; // Remove the token after successful verification
     user.verificationTokenExpiresAt = null; // Clear expiry date
 
+    // Send welcome email
+    await sendWelcomeEmail(user.email, user.name);
+
     // Save the updated user
     await user.save();
 
@@ -216,6 +223,9 @@ export const resendVerificationEmail = async (req, res) => {
     user.verificationToken = newVerificationToken; // Update the verification token
     user.verificationTokenExpiresAt = Date.now() + 15 * 60 * 1000; // Update the expiry date : 15 minutes
 
+    // Send verification email
+    await sendVerificationEmail(user.email, newVerificationToken);
+
     // Save the updated user
     await user.save();
 
@@ -230,4 +240,3 @@ export const resendVerificationEmail = async (req, res) => {
       .json({ success: false, message: "Internal server error." });
   }
 };
-
