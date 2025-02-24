@@ -34,11 +34,18 @@ const setCookies = (res, accessToken, refreshToken) => {
 };
 
 export const signup = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, confirmPassword } = req.body;
 
   try {
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !confirmPassword) {
       throw new Error("All fields are required");
+    }
+
+    // Ensure passwords match
+    if (password !== confirmPassword) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Passwords do not match" });
     }
 
     const userAlreadyExists = await User.findOne({ email });
