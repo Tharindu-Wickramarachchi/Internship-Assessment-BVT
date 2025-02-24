@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import { connectDB } from "./config/connectDB.js";
+import { connectDB } from "./config/database.config.js";
 import authRoutes from "./routes/auth.route.js";
 
 dotenv.config(); // Load environment variables from .env file

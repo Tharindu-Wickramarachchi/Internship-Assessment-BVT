@@ -230,3 +230,4 @@ export const resendVerificationEmail = async (req, res) => {
       .json({ success: false, message: "Internal server error." });
   }
 };
+
