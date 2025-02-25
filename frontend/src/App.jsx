@@ -3,6 +3,7 @@ import { ToastContainer } from "react-toastify";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import VerificationPage from "./pages/VerificationPage";
+import HomePage from "./pages/HomePage";
 import { useUserStore } from "./stores/useUserStore";
 import { useEffect } from "react";
 import LoadingSpinner from "./components/LoadingSpinner";
@@ -20,7 +21,12 @@ function App() {
     <div className="min-h-screen bg-gray-900 text-white relative overflow-hidden">
       <ToastContainer />
       <Routes>
-        <Route path="/" element={<SignupPage />} />
+        <Route
+          path="/"
+          element={
+            user && user.isVerified ? <HomePage /> : <Navigate to="/login" />
+          }
+        />
         <Route
           path="/signup"
           element={!user ? <SignupPage /> : <Navigate to="/verification" />}
@@ -32,10 +38,14 @@ function App() {
         <Route
           path="/verification"
           element={
-            user && !user.isVerified ? (
-              <VerificationPage />
+            user ? (
+              !user.isVerified ? (
+                <VerificationPage />
+              ) : (
+                <Navigate to="/" />
+              )
             ) : (
-              <Navigate to="/" />
+              <Navigate to="/signup" />
             )
           }
         />

@@ -46,7 +46,7 @@ export const WELCOME_EMAIL_TEMPLATE = `
     <p style="color: #e6e6e6;">We’re thrilled to have you on board! Thank you for joining TODO platform.</p>
     
       <div style="margin-top: 20px; text-align: center;">
-      <a href="https://website.com" 
+      <a href="http://localhost:5173/" 
          style="display: inline-block; padding: 12px 24px; background: linear-gradient(to bottom right, #0000ff, #4d4dff); color: white; 
          text-decoration: none; font-weight: bold; border-radius: 5px; text-align: center;">
         Visit the Site

@@ -2,8 +2,10 @@ import Task from "../models/task.model.js";
 
 export const getTasks = async (req, res) => {
   try {
+    console.log("getTasks controller");
     // Fetch all tasks created by the user
     const tasks = await Task.find({ user: req.user._id });
+    console.log("tasks", tasks);
     res.status(200).json({ tasks });
   } catch (error) {
     console.error("Error in getTasks controller: ", error.message);
@@ -11,16 +13,42 @@ export const getTasks = async (req, res) => {
   }
 };
 
+// export const createTask = async (req, res) => {
+//   try {
+//     const { user,task } = req.body;
+
+//     console.log("Create task controller");
+//     if (!task) {
+//       return res.status(400).json({ message: "Task is required." });
+//     }
+
+//     // Create a new task
+//     const newTask = new Task({ task });
+//     // Save the task to the database
+//     await newTask.save();
+
+//     return res
+//       .status(201)
+//       .json({ message: "Task created successfully", task: newTask });
+//   } catch (error) {
+//     console.error("Error creating task:", error);
+//     return res.status(500).json({ message: "Internal Server Error" });
+//   }
+// };
+
 export const createTask = async (req, res) => {
   try {
-    const { task } = req.body;
+    const { user, task } = req.body; // Ensure user is passed
 
-    if (!task) {
-      return res.status(400).json({ message: "Task is required." });
+    console.log("Create task controller");
+
+    if (!user || !task) {
+      return res.status(400).json({ message: "User and task are required." });
     }
 
     // Create a new task
-    const newTask = new Task({ task });
+    const newTask = new Task({ user, task });
+
     // Save the task to the database
     await newTask.save();
 
