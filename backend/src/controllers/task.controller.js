@@ -13,29 +13,6 @@ export const getTasks = async (req, res) => {
   }
 };
 
-// export const createTask = async (req, res) => {
-//   try {
-//     const { user,task } = req.body;
-
-//     console.log("Create task controller");
-//     if (!task) {
-//       return res.status(400).json({ message: "Task is required." });
-//     }
-
-//     // Create a new task
-//     const newTask = new Task({ task });
-//     // Save the task to the database
-//     await newTask.save();
-
-//     return res
-//       .status(201)
-//       .json({ message: "Task created successfully", task: newTask });
-//   } catch (error) {
-//     console.error("Error creating task:", error);
-//     return res.status(500).json({ message: "Internal Server Error" });
-//   }
-// };
-
 export const createTask = async (req, res) => {
   try {
     const { user, task } = req.body; // Ensure user is passed

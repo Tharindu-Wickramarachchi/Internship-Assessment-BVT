@@ -154,4 +154,27 @@ export const useUserStore = create((set, get) => ({
       });
     }
   },
+
+  refreshToken: async () => {
+    if (get().checkingAuth) return;
+
+    set({ checkingAuth: true });
+
+    try {
+      const response = await axios.post(
+        "/auth/refresh-token",
+        {},
+        { withCredentials: true }
+      );
+      set({ checkingAuth: false });
+      return response.data;
+    } catch (error) {
+      set({ user: null, checkingAuth: false });
+      console.error(
+        "Refresh token failed:",
+        error.response?.data || error.message
+      );
+      return null; // Avoid throwing an error unless necessary
+    }
+  },
 }));

@@ -7,6 +7,7 @@ import {
   resendVerificationEmail,
   deleteAccount,
   getProfile,
+  refreshToken,
 } from "../controllers/auth.controller.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
 
@@ -19,5 +20,6 @@ routes.post("/verify-email", verifyEmail);
 routes.post("/resend-verification-email", resendVerificationEmail);
 routes.delete("/delete-account", deleteAccount);
 routes.get("/profile", protectRoute, getProfile);
+routes.post("/refresh-token", refreshToken);
 
 export default routes;

@@ -5,15 +5,15 @@ import { useUserStore } from "../stores/useUserStore.js";
 import { User2, Loader } from "lucide-react";
 
 const LoginPage = () => {
-    const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-	const { login, loading } = useUserStore();
+  const { login, loading } = useUserStore();
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		login(email, password);
-	};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    login(email, password);
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
@@ -64,7 +64,7 @@ const LoginPage = () => {
 
         <p className="text-center text-sm font-medium text-gray-400">
           Don't have an account?{" "}
-          <a href="/" className="text-blue-500 hover:underline">
+          <a href="/signup" className="text-blue-500 hover:underline">
             Signup
           </a>
         </p>

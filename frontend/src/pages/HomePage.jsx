@@ -4,7 +4,6 @@ import { useUserStore } from "../stores/useUserStore";
 import Modal from "../components/Modal";
 import TaskItem from "../components/TaskItem";
 
-
 const MAX_LETTERS = 150; // Maximum character limit
 
 const HomePage = () => {
@@ -17,7 +16,7 @@ const HomePage = () => {
     deleteTask,
     deleteAllTasks,
   } = useTaskStore();
-  const { user } = useUserStore();
+  const { user, logout } = useUserStore();
   const [newTask, setNewTask] = useState("");
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -65,8 +64,17 @@ const HomePage = () => {
   const isTaskValid = charCount > 0 && charCount <= MAX_LETTERS;
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-5 bg-gray-900 text-gray-300 rounded-lg shadow-md">
-      <h1 className="text-3xl font-bold text-center text-blue-600 mb-4">TODO APP</h1>
+    <div className="max-w-lg mx-auto mt-16 p-5 bg-gray-900 text-gray-300 rounded-lg shadow-md">
+      <div className="flex justify-between items-center mb-5">
+        <h1 className="text-3xl font-bold text-blue-600">TODO APP</h1>
+
+        <button
+          onClick={() => logout()}
+          className="bg-gray-600 hover:bg-blue-800 text-black px-3 py-1 text-md font-medium rounded-full duration-300"
+        >
+          logout
+        </button>
+      </div>
 
       {/* Task Input Section */}
       <div className="mb-5">
