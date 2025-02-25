@@ -4,13 +4,18 @@ import { toast } from "react-toastify";
 
 const styles = {
   loadingStyle: {
-    className: "bg-sky-100 text-black",
+    style: { backgroundColor: "#233043", color: "#ffffff" },
     position: "top-center",
   },
   errorStyle: {
-    className: "bg-red-100 text-black",
     position: "top-center",
     autoClose: 3000,
+    style: { backgroundColor: "#233043", color: "#ffffff" },
+  },
+  successStyle: {
+    position: "top-center",
+    autoClose: 3000,
+    style: { backgroundColor: "#233043", color: "#ffffff" },
   },
 };
 
@@ -33,9 +38,7 @@ export const useUserStore = create((set, get) => ({
       set({ user: res.data, loading: false });
 
       toast.success("Signup successful! Please verify your email.", {
-        className: "bg-green-100 text-black",
-        position: "top-center",
-        autoClose: 3000,
+        ...styles.successStyle,
       });
     } catch (error) {
       set({ loading: false });
@@ -45,7 +48,7 @@ export const useUserStore = create((set, get) => ({
     }
   },
 
-  login: async ({ email, password }) => {
+  login: async (email, password) => {
     set({ loading: true });
 
     try {
@@ -57,9 +60,7 @@ export const useUserStore = create((set, get) => ({
       set({ user: res.data, loading: false });
 
       toast.success("Login successful!", {
-        className: "bg-green-100 text-black",
-        position: "top-center",
-        autoClose: 3000,
+        ...styles.successStyle,
       });
     } catch (error) {
       set({ loading: false });
@@ -74,9 +75,7 @@ export const useUserStore = create((set, get) => ({
       await axios.post("/auth/logout");
       set({ user: null });
       toast.success("Logged out successfully!", {
-        className: "bg-green-100 text-black",
-        position: "top-center",
-        autoClose: 3000,
+        ...styles.successStyle,
       });
     } catch (error) {
       toast.error("Logout failed, please try again.", {
@@ -85,18 +84,30 @@ export const useUserStore = create((set, get) => ({
     }
   },
 
-  verifyEmail: async ({ email, verificationToken }) => {
+  checkAuth: async () => {
+    set({ checkingAuth: true });
+    try {
+      const response = await axios.get("/auth/profile");
+      set({ user: response.data, checkingAuth: false });
+    } catch (error) {
+      console.log(error.message);
+      set({ checkingAuth: false, user: null });
+    }
+  },
+
+  verifyEmail: async (email, verificationToken) => {
     set({ loading: true });
 
     try {
       await axios.post("/auth/verify-email", { email, verificationToken });
 
-      set((state) => ({ user: { ...state.user, isVerified: true }, loading: false }));
+      set((state) => ({
+        user: { ...state.user, isVerified: true },
+        loading: false,
+      }));
 
       toast.success("Email verified successfully!", {
-        className: "bg-green-100 text-black",
-        position: "top-center",
-        autoClose: 3000,
+        ...styles.successStyle,
       });
     } catch (error) {
       set({ loading: false });
@@ -106,18 +117,16 @@ export const useUserStore = create((set, get) => ({
     }
   },
 
-  resendVerificationEmail: async ({ email }) => {
+  resendVerificationEmail: async (email) => {
     set({ loading: true });
 
     try {
-      await axios.post("/auth/resend-verification", { email });
+      await axios.post("/auth/resend-verification-email", { email });
 
       set({ loading: false });
 
       toast.success("Verification email sent successfully!", {
-        className: "bg-green-100 text-black",
-        position: "top-center",
-        autoClose: 3000,
+        ...styles.successStyle,
       });
     } catch (error) {
       set({ loading: false });
@@ -127,18 +136,16 @@ export const useUserStore = create((set, get) => ({
     }
   },
 
-  deleteAccount: async ({ email }) => {
+  deleteAccount: async (email) => {
     set({ loading: true });
 
     try {
-      await axios.post("/auth/delete-account", { email });
+      await axios.delete("/auth/delete-account", { email });
 
       set({ user: null, loading: false });
 
       toast.success("Account deleted successfully.", {
-        className: "bg-green-100 text-black",
-        position: "top-center",
-        autoClose: 3000,
+        ...styles.successStyle,
       });
     } catch (error) {
       set({ loading: false });

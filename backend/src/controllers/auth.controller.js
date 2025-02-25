@@ -136,6 +136,7 @@ export const login = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      isVerified: user.isVerified,
     });
   } catch (error) {
     console.error("Error in login controller:", error.message);
@@ -267,5 +268,13 @@ export const deleteAccount = async (req, res) => {
   } catch (error) {
     console.error("Error in deleteAccount controller:", error);
     res.status(500).json({ success: false, message: "Internal server error." });
+  }
+};
+
+export const getProfile = async (req, res) => {
+  try {
+    res.json(req.user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };

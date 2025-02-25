@@ -6,7 +6,9 @@ import {
   verifyEmail,
   resendVerificationEmail,
   deleteAccount,
+  getProfile,
 } from "../controllers/auth.controller.js";
+import { protectRoute } from "../middleware/auth.middleware.js";
 
 const routes = express.Router();
 
@@ -16,5 +18,6 @@ routes.post("/logout", logout);
 routes.post("/verify-email", verifyEmail);
 routes.post("/resend-verification-email", resendVerificationEmail);
 routes.delete("/delete-account", deleteAccount);
+routes.get("/profile", protectRoute, getProfile);
 
 export default routes;

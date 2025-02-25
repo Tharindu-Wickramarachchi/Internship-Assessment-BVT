@@ -2,67 +2,40 @@ import React, { useState } from "react";
 import InputField from "../components/InputField";
 import PasswordField from "../components/PasswordField";
 import { useUserStore } from "../stores/useUserStore.js";
-import { UserPlus, Loader } from "lucide-react";
+import { User2, Loader } from "lucide-react";
 
-const SignupPage = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+const LoginPage = () => {
+    const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
 
-  const { signup, loading } = useUserStore();
+	const { login, loading } = useUserStore();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    signup(formData);
-  };
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		login(email, password);
+	};
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-md space-y-6 p-6 text-gray-100 bg-gray-800 border-2 border-gray-700 rounded-lg">
-        <h2 className="text-center text-3xl font-bold text-gray-100">Signup</h2>
+        <h2 className="text-center text-3xl font-bold text-gray-100">Login</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <InputField
-            label="Name"
-            id="name"
-            type="text"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="Enter your name"
-          />
-
           <InputField
             label="Email"
             id="email"
             type="email"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
           />
 
           <PasswordField
             label="Password"
             id="password"
-            value={formData.password}
-            onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
-          />
-
-          <PasswordField
-            label="Confirm Password"
-            id="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={(e) =>
-              setFormData({ ...formData, confirmPassword: e.target.value })
-            }
-            placeholder="Confirm your password"
           />
 
           <button
@@ -82,17 +55,17 @@ const SignupPage = () => {
               </>
             ) : (
               <>
-                <UserPlus className="mr-2 h-5 w-5" aria-hidden="true" />
-                Signup
+                <User2 className="mr-2 h-5 w-5" aria-hidden="true" />
+                Login
               </>
             )}
           </button>
         </form>
 
         <p className="text-center text-sm font-medium text-gray-400">
-          Already have an account?{" "}
-          <a href="/login" className="text-blue-500 hover:underline">
-            Login
+          Don't have an account?{" "}
+          <a href="/" className="text-blue-500 hover:underline">
+            Signup
           </a>
         </p>
       </div>
@@ -100,4 +73,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default LoginPage;
