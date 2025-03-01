@@ -31,7 +31,7 @@ export const sendWelcomeEmail = async (email, name) => {
     const mailOptions = {
       from: sender,
       to: email,
-      subject: "Welcome to Evolt",
+      subject: "Welcome to TODO",
       html: WELCOME_EMAIL_TEMPLATE.replace("{name}", name),
     };
 

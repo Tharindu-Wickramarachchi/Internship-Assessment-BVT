@@ -140,7 +140,9 @@ export const useUserStore = create((set, get) => ({
     set({ loading: true });
 
     try {
-      await axios.delete("/auth/delete-account", { email });
+      await axios.delete("/auth/delete-account", {
+        data: { email },
+      });
 
       set({ user: null, loading: false });
 
